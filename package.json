@@ -5,15 +5,15 @@
     "dotenv": "^16.0.3",
     "openai": "^3.2.1"
   },
-  "name": "pepex",
-  "version": "0.0.1",
+  "name": "chatrgb",
+  "version": "0.0.2",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kruceo/pepex.git"
+    "url": "git+https://github.com/Kruceo/chatRGB.git"
   },
   "author": "Kruceo",
   "license": "ISC",

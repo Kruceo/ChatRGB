@@ -17,27 +17,24 @@ export const client = new Client(
   });
 
 client.on('ready', async () => {
-  console.log('[Server] logged with ' + client.user.username)
+  console.log('[SVR] logged with ' + client.user.username)
   // models()
 })
 
 client.on('error', async (e) => {
-  const msg = await getMainChannels(client).at(0).send('Deu ruim bicho  ' + e)
+  console.log('[SVR] Error: \n' + e)
+  const msg = await getMainChannels(client).at(0).send('Deu ruim bicho  \n```' + e + '```')
 })
 
 
 client.on('messageCreate', async message => {
   if (!message.author.bot) {
-    console.log(message.content)
+    console.log("[USR] " + message.author.username + ' - ' +message.content)
     if (message.content.toLowerCase().startsWith('chat')) {
 
       let sliced = message.content.slice(5, message.content.length)
-      console.log(sliced)
       let response = await chat(sliced)
-      //JSON.stringify(response)
-      console.log(response)
       message.reply(response)
-      // message.channel.send(response)
     }
   }
   if (message.content.toLowerCase().startsWith('setsufix')) {

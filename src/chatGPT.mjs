@@ -11,12 +11,12 @@ const openai = new OpenAIApi(configuration);
 export async function chat(message) {
     const response = await openai.createCompletion({
         model: "text-davinci-003",
-        suffix:roleplay +", resposta curta",
+        suffix:roleplay,
         prompt: message,
         max_tokens: 200,
-        temperature: 0.2,
+        temperature: 0.3,
       });
-      console.log(response.data.usage.total_tokens)
+      console.log('[SVR] token cost: '+response.data.usage.total_tokens)
      return (response.data.choices[0].text)
   }
   

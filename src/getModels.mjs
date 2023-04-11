@@ -7,7 +7,6 @@ export async function models(message) {
         'Authorization': `Bearer ${cfg.APIKEY}`
     };
 
-    const res = await axios.get(' https://api.openai.com/v1/models', { headers })
-    console.log(res.data)
+    const res = await axios.get('https://api.openai.com/v1/models', { headers })
     return res
 }
