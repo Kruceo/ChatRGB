@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "axios": "^1.3.5",
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "openai": "^3.2.1"
+  },
+  "name": "pepex",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kruceo/pepex.git"
+  },
+  "author": "Kruceo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kruceo/pepex/issues"
+  },
+  "homepage": "https://github.com/Kruceo/pepex#readme",
+  "description": ""
+}
