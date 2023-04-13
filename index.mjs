@@ -2,8 +2,6 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { chat } from './src/chatGPT.mjs';
 import { cfg, setRoleplay } from './src/config.mjs';
-import { models } from './src/getModels.mjs';
-import { getDevKeys, getMainChannels } from './src/utils.mjs';
 
 export const client = new Client(
   {
@@ -29,11 +27,11 @@ client.on('error', async (e) => {
 
 client.on('messageCreate', async message => {
   if (!message.author.bot) {
-    console.log("[USR] " + message.author.username + ' - ' +message.content)
+    console.log("[USR] " + message.author.username + ' - ' + message.content)
     if (message.content.toLowerCase().startsWith('chat')) {
 
       let sliced = message.content.slice(5, message.content.length)
-      let response = await chat(sliced,message.author.username)
+      let response = await chat(sliced, message.author.username)
       message.reply(response)
     }
   }
@@ -48,5 +46,17 @@ client.on('messageCreate', async message => {
   }
 })
 
+login()
 
-client.login(cfg.discord_key)
+function login() {
+  console.log('[SVR] trying to login...')
+  client.login(cfg.discord_key).catch((err) => {
+    console.log('[SVR] Error: ' + err)
+    console.log('[SVR] Trying again in 5 seconds')
+    setTimeout(()=>{
+      login()
+    },5000)
+  })
+}
+
+

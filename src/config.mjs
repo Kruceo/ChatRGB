@@ -5,28 +5,39 @@ import { getConfigObj, getDevKeys } from './utils.mjs'
 
 class Config {
   constructor() {
-
-    if (!fs.existsSync(path.resolve(process.cwd(), 'data', 'memory', 'config.env'))) {
-      fs.writeFileSync(path.resolve(process.cwd(), 'data', 'memory', 'config.env'), 'discord_key=write with your key\nopenai_key=write with your key\nmodel=text-davinci-003')
-      throw new Error('Config.env not exist,will be created on ' + path.resolve(process.cwd(), 'data', 'memory', 'config.env'))
+    this.renew = () => {
+      if (!fs.existsSync(path.resolve(process.cwd(), 'data', 'memory', 'config.env'))) {
+        try {
+          mkdirSync(path.resolve(process.cwd(), 'data', 'memory'), { recursive: true })
+        } catch (error) {
+          console.error("###############################\n\n", error, '\n\n##############################')
+        }
+        fs.writeFileSync(path.resolve(process.cwd(), 'data', 'memory', 'config.env'), 'discord_key=write with your key\nopenai_key=write with your key\nmodel=text-davinci-003')
+        throw new Error('Config.env not exist,will be created on ' + path.resolve(process.cwd(), 'data', 'memory', 'config.env'))
+      }
+     
+      if (process.argv[2] == 'dev') {
+        this.getter = getDevKeys
+        console.log('[SVR] ----------------- DEVELOPER MODE ------------------')
+        console.log('[SVR] *IMPORTANT* Write your keys a folder out of project folder with name "chatrgb.env"')
+        console.log('[SVR] getter', this.getter.name)
+      }
+      else{
+        console.log('[SVR] ----------------- NORMAL MODE ------------------')
+        console.log('[SVR] *IMPORTANT* Remember to write your keys in the config file at data/memory/config.env')
+        this.getter = getConfigObj
+      }
     }
-   
-    const obj = getConfigObj(path.resolve(process.cwd(), 'data', 'memory', 'config.env'))
 
-    this.discord_key = obj.discord_key
-    this.openai_key = obj.openai_key
-    this.model = obj.model
-    this.getRoleplay = getRoleplay
-    this.getMaxTokens = getMaxTokens
+    this.renew()
+  }
 
-    if (process.argv[2] == 'dev') {
-      console.log('[SVR] ----------------- DEVELOPER MODE ------------------')
-      console.log('[SVR] *IMPORTANT* Write your keys a folder out of project folder with name "chatrgb.env"')
-      const devkeys = getDevKeys()
-      console.log('[SVR] devkeys', devkeys)
-      this.discord_key = devkeys.discord_key
-      this.openai_key = devkeys.openai_key
-    }
+  get discord_key (){
+
+    return this.getter(path.resolve(process.cwd(),'data','memory','config.env')).discord_key
+  }
+  get openai_key (){
+    return this.getter(path.resolve(process.cwd(),'data','memory','config.env')).openai_key
   }
 }
 
