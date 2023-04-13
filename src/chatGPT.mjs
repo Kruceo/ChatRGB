@@ -15,6 +15,8 @@ export async function chat(message,user) {
       prompt: message + ', ' + cfg.getRoleplay(user),
       max_tokens: parseInt(cfg.getMaxTokens()),
       temperature: cfg.getTemperature(),
+      n:1
+      
     }
     console.log(config)
     const response = await openai.createCompletion(config);
