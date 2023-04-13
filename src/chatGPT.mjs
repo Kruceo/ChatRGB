@@ -1,20 +1,23 @@
-import axios from "axios";
-import { cfg } from "./utils.mjs";
+
+import { cfg } from "./config.mjs";
 import { Configuration, OpenAIApi } from "openai"
-import { max_tokens, roleplay } from "./config.mjs";
+
 
 const configuration = new Configuration({
-  apiKey: cfg.APIKEY,
+  apiKey: cfg.openai_key,
 });
 const openai = new OpenAIApi(configuration);
 
 export async function chat(message,user) {
-    const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: message + ', ' + roleplay(user),
-        max_tokens: max_tokens(),
-        temperature: 0,
-      });
+
+    const config = {
+      model: cfg.model??"text-davinci-003",
+      prompt: message + ', ' + cfg.getRoleplay(user),
+      max_tokens: parseInt(cfg.getMaxTokens()),
+      temperature: 0,
+    }
+    console.log(config)
+    const response = await openai.createCompletion(config);
       console.log('[SVR] token cost: '+response.data.usage.total_tokens)
      return (response.data.choices[0].text)
   }

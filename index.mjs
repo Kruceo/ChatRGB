@@ -1,7 +1,7 @@
 
-import { bold, Client, EmbedBuilder, Emoji, GatewayIntentBits } from 'discord.js';
+import { Client, GatewayIntentBits } from 'discord.js';
 import { chat } from './src/chatGPT.mjs';
-import { setRoleplay } from './src/config.mjs';
+import { cfg, setRoleplay } from './src/config.mjs';
 import { models } from './src/getModels.mjs';
 import { getMainChannels } from './src/utils.mjs';
 
@@ -23,7 +23,7 @@ client.on('ready', async () => {
 
 client.on('error', async (e) => {
   console.log('[SVR] Error: \n' + e)
-  const msg = await getMainChannels(client).at(0).send('Deu ruim bicho  \n```' + e + '```')
+  //const msg = await getMainChannels(client).at(0).send('Deu ruim bicho  \n```' + e + '```')
 })
 
 
@@ -33,7 +33,7 @@ client.on('messageCreate', async message => {
     if (message.content.toLowerCase().startsWith('chat')) {
 
       let sliced = message.content.slice(5, message.content.length)
-      let response = await chat(sliced)
+      let response = await chat(sliced,message.author.username)
       message.reply(response)
     }
   }
@@ -49,4 +49,4 @@ client.on('messageCreate', async message => {
 })
 
 
-client.login(process.env.TOKEN)
+client.login(cfg.discord_key)
