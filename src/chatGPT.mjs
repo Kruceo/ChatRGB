@@ -14,7 +14,7 @@ export async function chat(message,user) {
       model: cfg.model??"text-davinci-003",
       prompt: message + ', ' + cfg.getRoleplay(user),
       max_tokens: parseInt(cfg.getMaxTokens()),
-      temperature: 0,
+      temperature: cfg.getTemperature(),
     }
     console.log(config)
     const response = await openai.createCompletion(config);

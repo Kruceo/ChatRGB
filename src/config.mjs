@@ -40,6 +40,7 @@ class Config {
 
     this.getRoleplay = (name) => getRoleplay(path.resolve(this.configPath, 'roleplay.conf'), name)
     this.getMaxTokens = () => getMaxTokens(path.resolve(this.configPath,'maxtokens.conf'))
+    this.getTemperature = ()=>{ getTemperature(path.resolve(this.configPath,'temperature.conf'))}
   }
 
   get discord_key() {
@@ -52,6 +53,7 @@ class Config {
   get model() {
     return this.getter(this.configFile).model
   }
+  get
 }
 
 export const cfg = new Config()
@@ -73,6 +75,16 @@ function getMaxTokens(path) {
   else {
     fs.writeFileSync(path, '255')
     return 255
+  }
+}
+
+function getTemperature(path) {
+  if (fs.existsSync(path)) {
+    return parseFloat(fs.readFileSync(path, 'utf-8'))
+  }
+  else {
+    fs.writeFileSync(path, '255')
+    return 0.5
   }
 }
 
