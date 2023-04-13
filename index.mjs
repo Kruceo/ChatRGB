@@ -55,7 +55,7 @@ function login() {
     console.log('[SVR] Trying again in 5 seconds')
     setTimeout(()=>{
       login()
-    },5000)
+    },10000)
   })
 }
 

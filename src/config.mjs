@@ -1,65 +1,77 @@
-import fs from 'fs'
+import fs, { mkdirSync } from 'fs'
 import path from 'path'
 import { getConfigObj, getDevKeys } from './utils.mjs'
 
 
 class Config {
   constructor() {
-    this.renew = () => {
-      if (!fs.existsSync(path.resolve(process.cwd(), 'data', 'memory', 'config.env'))) {
-        try {
-          mkdirSync(path.resolve(process.cwd(), 'data', 'memory'), { recursive: true })
-        } catch (error) {
-          console.error("###############################\n\n", error, '\n\n##############################')
-        }
-        fs.writeFileSync(path.resolve(process.cwd(), 'data', 'memory', 'config.env'), 'discord_key=write with your key\nopenai_key=write with your key\nmodel=text-davinci-003')
-        throw new Error('Config.env not exist,will be created on ' + path.resolve(process.cwd(), 'data', 'memory', 'config.env'))
-      }
-     
-      if (process.argv[2] == 'dev') {
-        this.getter = getDevKeys
-        console.log('[SVR] ----------------- DEVELOPER MODE ------------------')
-        console.log('[SVR] *IMPORTANT* Write your keys a folder out of project folder with name "chatrgb.env"')
-        console.log('[SVR] getter', this.getter.name)
-      }
-      else{
-        console.log('[SVR] ----------------- NORMAL MODE ------------------')
-        console.log('[SVR] *IMPORTANT* Remember to write your keys in the config file at data/memory/config.env')
-        this.getter = getConfigObj
-      }
+
+    this.configPath = path.resolve(process.cwd(), 'data', 'memory')
+    if (process.argv.includes('-cp')) {
+      this.configPath = path.resolve(process.argv[process.argv.indexOf('-cp') + 1], './')
     }
 
-    this.renew()
+    this.configFile = path.resolve(this.configPath, 'config.conf')
+
+    console.log('[SVR] path: ' + this.configPath)
+
+    console.log('[SVR] file: ' + this.configFile)
+
+
+    if (!fs.existsSync(path.resolve(this.configPath))) {
+      mkdirSync(this.configPath, { recursive: true })
+    }
+    if (!fs.existsSync(path.resolve(this.configFile))) {
+      fs.writeFileSync(path.resolve(this.configFile), 'discord_key=write with your key\nopenai_key=write with your key\nmodel=text-davinci-003')
+      // throw new Error('Config.env not exist,will be created on ' + this.configFile)
+    }
+
+    if (process.argv[2] == 'dev') {
+      this.getter = getDevKeys
+      console.log('[SVR] ----------------- DEVELOPER MODE ------------------')
+      console.log('[SVR] *IMPORTANT* Write your keys a folder out of project folder with name "chatrgb.env"')
+      console.log('[SVR] getter', this.getter.name)
+    }
+    else {
+      console.log('[SVR] ----------------- NORMAL MODE ------------------')
+      console.log('[SVR] *IMPORTANT* Remember to write your keys in the config file at data/memory/config.env')
+      this.getter = getConfigObj
+    }
+
+    this.getRoleplay = (name) => getRoleplay(path.resolve(this.configPath, 'roleplay.conf'), name)
+    this.getMaxTokens = () => getMaxTokens(path.resolve(this.configPath,'maxtokens.conf'))
   }
 
-  get discord_key (){
+  get discord_key() {
 
-    return this.getter(path.resolve(process.cwd(),'data','memory','config.env')).discord_key
+    return this.getter(this.configFile).discord_key
   }
-  get openai_key (){
-    return this.getter(path.resolve(process.cwd(),'data','memory','config.env')).openai_key
+  get openai_key() {
+    return this.getter(this.configFile).openai_key
+  }
+  get model() {
+    return this.getter(this.configFile).model
   }
 }
 
 export const cfg = new Config()
 
-
-function getRoleplay(name) {
-  if (fs.existsSync('./data/memory/roleplay.conf')) {
-    return fs.readFileSync('./data/memory/roleplay.conf', 'utf-8').replaceAll('#USER#', name ?? 'onichan')
+function getRoleplay(path, name) {
+  if (fs.existsSync(path)) {
+    return fs.readFileSync(path, 'utf-8').replaceAll('#USER#', name ?? 'onichan')
   }
   else {
-    fs.writeFileSync('./data/memory/roleplay.conf', 'me responda como uma garota de anime animada usando girias e me chamando por um apelido carinhoso para #USER#')
+    fs.writeFileSync(path, 'me responda como uma garota de anime animada usando girias e me chamando por um apelido carinhoso para #USER#')
     return 'me responda como uma garota de anime animada usando girias e me chamando por um apelido carinhoso para #USER#'.replaceAll('#USER#', name ?? 'onichan')
   }
 }
 
-function getMaxTokens() {
-  if (fs.existsSync('./data/memory/maxtoken.conf')) {
-    return fs.readFileSync('./data/memory/maxtoken.conf', 'utf-8')
+function getMaxTokens(path) {
+  if (fs.existsSync(path)) {
+    return fs.readFileSync(path, 'utf-8')
   }
   else {
-    fs.writeFileSync('./data/memory/maxtoken.conf', '255')
+    fs.writeFileSync(path, '255')
     return 255
   }
 }
