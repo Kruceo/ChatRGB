@@ -3,7 +3,7 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import { chat } from './src/chatGPT.mjs';
 import { cfg, setRoleplay } from './src/config.mjs';
 import { models } from './src/getModels.mjs';
-import { getMainChannels } from './src/utils.mjs';
+import { getDevKeys, getMainChannels } from './src/utils.mjs';
 
 export const client = new Client(
   {
