@@ -18,9 +18,12 @@ export async function chat(message,user) {
       n:1
       
     }
-    console.log(config)
+
+    console.log('[SVR] ' + JSON.stringify(config))
     const response = await openai.createCompletion(config);
-      console.log('[SVR] token cost: '+response.data.usage.total_tokens)
-     return (response.data.choices[0].text)
+    const text = response.data.choices[0].text
+    console.log('[SVR] response: '+text)
+    console.log('[SVR] token cost: '+response.data.usage.total_tokens)
+     return text
   }
   

@@ -62,8 +62,8 @@ function getRoleplay(path, name) {
     return fs.readFileSync(path, 'utf-8').replaceAll('#USER#', name ?? 'onichan')
   }
   else {
-    fs.writeFileSync(path, 'me responda como uma garota de anime animada usando girias e me chamando por um apelido carinhoso para #USER#')
-    return 'me responda como uma garota de anime animada usando girias e me chamando por um apelido carinhoso para #USER#'.replaceAll('#USER#', name ?? 'onichan')
+    fs.writeFileSync(path, 'me responda como um pirata animado e me chamando de #USER#')
+    return 'me responda como um pirata animado e me chamando de #USER#'.replaceAll('#USER#', name ?? 'onichan')
   }
 }
 
