@@ -13,23 +13,23 @@ export async function chat(message, user) {
   const botName = 'Bot'
   const userName = 'User'
 
-  cfg.addContext(userName + ': ' + message)
+  
   const config = {
     model: cfg.model ?? "text-davinci-003",
-    prompt: cfg.getContext() + ', ' + cfg.getRoleplay(user),
-    max_tokens: parseInt(cfg.getMaxTokens()),
-    temperature: cfg.getTemperature(),
+    prompt: cfg.getContext() + '\n ' + message+', ' +cfg.getRoleplay(user),
+    max_tokens: parseInt(cfg.maxtokens),
+    temperature: parseFloat(cfg.temperature),
     n: 1
   }
-
-  console.log('[SVR] ' + JSON.stringify(config.prompt))
+  cfg.addContext(userName + ': ' + message)
+  console.log('[SVR] ' + JSON.stringify(config))
   const response = await openai.createCompletion(config);
   let text = response.data.choices[0].text
   console.log(text.toLowerCase().trim())
   if (text.includes(botName + ': ')) {
     text = text.replaceAll(botName + ": ", '')
   }
-  if (':.?,'.indexOf(text.toLowerCase()[0]) !== -1) {
+  if (':.?,!#'.indexOf(text.toLowerCase()[0]) !== -1) {
     text = text.slice(1);
   }
   cfg.addContext(botName + ': ' + text.replaceAll('\n', ' '))

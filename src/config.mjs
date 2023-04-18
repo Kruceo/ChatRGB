@@ -5,9 +5,10 @@ import { getConfigObj, getDevKeys } from './utils.mjs'
 
 class Config {
   constructor() {
-    this.contextTimeout = 10 * 1000
+    this.contextTimeout = 2 * 1000 * 60
     this.contextTime = (new Date()).getTime() + this.contextTimeout
     this.configPath = path.resolve(process.cwd(), 'data', 'memory')
+
     if (process.argv.includes('-cp')) {
       this.configPath = path.resolve(process.argv[process.argv.indexOf('-cp') + 1], './')
     }
@@ -18,7 +19,6 @@ class Config {
 
     console.log('[SVR] file: ' + this.configFile)
 
-
     if (!fs.existsSync(path.resolve(this.configPath))) {
       mkdirSync(this.configPath, { recursive: true })
     }
@@ -27,23 +27,18 @@ class Config {
       // throw new Error('Config.env not exist,will be created on ' + this.configFile)
     }
 
-    if (process.argv[2] == 'dev') {
-      this.getter = getDevKeys
-      console.log('[SVR] ----------------- DEVELOPER MODE ------------------')
-      console.log('[SVR] *IMPORTANT* Write your keys a folder out of project folder with name "chatrgb.env"')
-      console.log('[SVR] getter', this.getter.name)
-    }
-    else {
-      console.log('[SVR] ----------------- NORMAL MODE ------------------')
-      console.log('[SVR] *IMPORTANT* Remember to write your keys in the config file at data/memory/config.env')
-      this.getter = getConfigObj
-    }
+    console.log('[SVR] ----------------- NORMAL MODE ------------------')
+    console.log('[SVR] *IMPORTANT* Remember to write your keys in the config file at data/memory/config.env')
+    this.getter = getConfigObj
 
     this.getRoleplay = (name) => { return getRoleplay(path.resolve(this.configPath, 'roleplay.conf'), name) }
-    this.getMaxTokens = () => { return getMaxTokens(path.resolve(this.configPath, 'maxtokens.conf')) }
-    this.getTemperature = () => { return getTemperature(path.resolve(this.configPath, 'temperature.conf')) }
-
-    this.getContext = () => { return getContext(path.resolve(this.configPath, 'context.conf')) }
+    this.getContext = () => {
+      if (this.enable_context.replaceAll(' ','') == 'true')
+        return getContext(path.resolve(this.configPath, 'context.conf'))
+      else {
+        return ''
+      }
+    }
     this.addContext = (text) => {
       return addContext(path.resolve(this.configPath, 'context.conf'), text, (path) => {
         if ((new Date()).getTime() >= this.contextTime) {
@@ -56,13 +51,22 @@ class Config {
 
   get discord_key() {
 
-    return this.getter(this.configFile).discord_key
+    return this.getter(this.configFile).get('discord_key', 'write a key here')
   }
   get openai_key() {
-    return this.getter(this.configFile).openai_key
+    return this.getter(this.configFile).get('openai_key', 'write a key here')
   }
   get model() {
-    return this.getter(this.configFile).model
+    return this.getter(this.configFile).get('model', 'text-davinci-003')
+  }
+  get temperature() {
+    return this.getter(this.configFile).get('temperature', '0.5')
+  }
+  get maxtokens() {
+    return this.getter(this.configFile).get('maxtokens', '128')
+  }
+  get enable_context() {
+    return this.getter(this.configFile).get('enable_context', 'true')
   }
 }
 
@@ -78,26 +82,6 @@ function getRoleplay(path, name) {
   }
 }
 
-function getMaxTokens(path) {
-  if (fs.existsSync(path)) {
-    return fs.readFileSync(path, 'utf-8')
-  }
-  else {
-    fs.writeFileSync(path, '255')
-    return 255
-  }
-}
-
-function getTemperature(path) {
-  if (fs.existsSync(path)) {
-    return parseFloat(fs.readFileSync(path, 'utf-8'))
-  }
-  else {
-    fs.writeFileSync(path, '0.5')
-    return 0.5
-  }
-}
-
 export const setRoleplay = (text) => {
   fs.writeFileSync('./data/memory/roleplay.conf', text)
 }
@@ -110,13 +94,10 @@ export const getContext = (path) => {
 
     let parsed = ''
     textSplited.forEach((each, index) => {
-      console.log(index, textSplited.length - 5, each)
       if (index >= textSplited.length - 5) {
         parsed += each + '\n'
       }
     })
-    console.log('####parsed####\n' + parsed + '\n##################')
-
     return parsed
   }
   else {

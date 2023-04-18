@@ -18,7 +18,19 @@ export function getDevKeys() {
 export function getConfigObj(path) {
   const file = fs.readFileSync(path, 'utf-8') + '\n'
 
-  let obj = {}
+  let obj = {
+    data:{},
+    get:(item,defaultValue)=>{
+      if(obj.data[item]){
+        return obj.data[item]
+      }
+      else{
+        fs.writeFileSync(path,file+item + '=' + defaultValue)
+        return defaultValue
+      }
+    }
+
+  }
 
   file.split('\n').forEach(each => {
     const [prop, value] = each.split('=')
@@ -26,7 +38,7 @@ export function getConfigObj(path) {
       if(prop.length==0)return null
       console.error('[SVR] The config.env have undefined itens. \n  {' + prop + '=' + value + '} => This can cause errors!')
     }
-    obj[prop] = value
+    obj.data[prop] = value
   })
   return obj
 }
