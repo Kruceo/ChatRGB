@@ -34,7 +34,7 @@ class Config {
     this.getRoleplay = (name) => { return getRoleplay(path.resolve(this.configPath, 'roleplay.conf'), name) }
     this.getContext = () => {
       if (this.enable_context.replaceAll(' ','') == 'true')
-        return getContext(path.resolve(this.configPath, 'context.conf'))
+        return getContext(path.resolve(this.configPath, 'context.conf'),this.context_length)
       else {
         return ''
       }
@@ -68,6 +68,9 @@ class Config {
   get enable_context() {
     return this.getter(this.configFile).get('enable_context', 'true')
   }
+  get context_length() {
+    return this.getter(this.configFile).get('context_length', '5')
+  }
 }
 
 export const cfg = new Config()
@@ -87,14 +90,15 @@ export const setRoleplay = (text) => {
 }
 
 
-export const getContext = (path) => {
+export const getContext = (path,length) => {
   if (fs.existsSync(path)) {
     let textSplited = fs.readFileSync(path, 'utf-8').split('\n')
     console.log(textSplited)
 
     let parsed = ''
     textSplited.forEach((each, index) => {
-      if (index >= textSplited.length - 5) {
+      if (index >= textSplited.length - length) {
+        if(each.length > 0)
         parsed += each + '\n'
       }
     })
