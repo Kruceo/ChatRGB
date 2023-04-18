@@ -1,6 +1,7 @@
 // import { client } from "../index.mjs";
-import fs, { existsSync } from 'fs'
+import fs from 'fs'
 import path from 'path';
+import { logger } from './config.mjs';
 
 
 export function getMainChannels(client) {
@@ -36,7 +37,7 @@ export function getConfigObj(path) {
     const [prop, value] = each.split('=')
     if (prop == undefined || value == undefined) {
       if(prop.length==0)return null
-      console.error('[SVR] The config.env have undefined itens. \n  {' + prop + '=' + value + '} => This can cause errors!')
+      logger.warn('[SVR] The config.env have undefined itens. \n  {' + prop + '=' + value + '} => This can cause errors!')
     }
     obj.data[prop] = value
   })

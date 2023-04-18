@@ -1,7 +1,8 @@
 import fs, { mkdirSync } from 'fs'
 import path, { parse } from 'path'
 import { getConfigObj, getDevKeys } from './utils.mjs'
-
+import {Logger} from 'madeira'
+export const logger = new Logger('./logs')
 
 class Config {
   constructor() {
@@ -15,9 +16,8 @@ class Config {
 
     this.configFile = path.resolve(this.configPath, 'config.conf')
 
-    console.log('[SVR] path: ' + this.configPath)
-
-    console.log('[SVR] file: ' + this.configFile)
+    logger.info('config path: ' + this.configPath)
+    logger.info('config file: ' + this.configFile)
 
     if (!fs.existsSync(path.resolve(this.configPath))) {
       mkdirSync(this.configPath, { recursive: true })
@@ -26,9 +26,6 @@ class Config {
       fs.writeFileSync(path.resolve(this.configFile), 'discord_key=write with your key\nopenai_key=write with your key\nmodel=text-davinci-003\ncontextual=true')
       // throw new Error('Config.env not exist,will be created on ' + this.configFile)
     }
-
-    console.log('[SVR] ----------------- NORMAL MODE ------------------')
-    console.log('[SVR] *IMPORTANT* Remember to write your keys in the config file at data/memory/config.env')
     this.getter = getConfigObj
 
     this.getRoleplay = (name) => { return getRoleplay(path.resolve(this.configPath, 'roleplay.conf'), name) }
