@@ -26,7 +26,8 @@ export function getConfigObj(path) {
         return obj.data[item]
       }
       else{
-        fs.writeFileSync(path,file+item + '=' + defaultValue)
+        if(!file.endsWith('\n'))fs.appendFileSync(path,'\n')
+        fs.appendFileSync(path,item + '=' + defaultValue+'\n')
         return defaultValue
       }
     }

@@ -1,72 +1,79 @@
-import fs, { mkdirSync } from 'fs'
+import fs, { mkdirSync, writeFileSync } from 'fs'
 import path, { parse } from 'path'
 import { getConfigObj, getDevKeys } from './utils.mjs'
-import {Logger} from 'madeira'
+import { Logger } from 'madeira'
 export const logger = new Logger('./logs')
 
 class Config {
   constructor() {
-    this.contextTimeout = 2 * 1000 * 60
-    this.contextTime = (new Date()).getTime() + this.contextTimeout
-    this.configPath = path.resolve(process.cwd(), 'data', 'memory')
-
+    //resolve config paths
+    this.config_path = path.resolve(process.cwd(), 'data', 'memory');
     if (process.argv.includes('-cp')) {
-      this.configPath = path.resolve(process.argv[process.argv.indexOf('-cp') + 1], './')
+      this.config_path = path.resolve(process.argv[process.argv.indexOf('-cp') + 1], './');
     }
+    this.config_file = path.resolve(this.config_path, 'config.conf');
 
-    this.configFile = path.resolve(this.configPath, 'config.conf')
-
-    logger.info('config path: ' + this.configPath)
-    logger.info('config file: ' + this.configFile)
-
-    if (!fs.existsSync(path.resolve(this.configPath))) {
-      mkdirSync(this.configPath, { recursive: true })
+    if (!fs.existsSync(this.config_path)) {
+      mkdirSync(this.config_path, { recursive: true });
+    
     }
-    if (!fs.existsSync(path.resolve(this.configFile))) {
-      fs.writeFileSync(path.resolve(this.configFile), 'discord_key=write with your key\nopenai_key=write with your key\nmodel=text-davinci-003\ncontextual=true')
-      // throw new Error('Config.env not exist,will be created on ' + this.configFile)
+    if (!fs.existsSync(this.config_file)) {
+      writeFileSync(this.config_file,'')
+    
     }
-    this.getter = getConfigObj
+   
+    //set the getter method
+    this.getter = getConfigObj;
 
-    this.getRoleplay = (name) => { return getRoleplay(path.resolve(this.configPath, 'roleplay.conf'), name) }
+    logger.info('config path: ' + this.config_path);
+    logger.info('config file: ' + this.config_file);
+
+    //configure first moment context timer
+    this.context_time = (new Date()).getTime() + parseInt(this.context_timeout);
+
+    //roleplay and context getter with personalization like user name
+    this.getRoleplay = (name) => { return getRoleplay(path.resolve(this.config_path, 'roleplay.conf'), name) }
     this.getContext = () => {
-      if (this.enable_context.replaceAll(' ','') == 'true')
-        return getContext(path.resolve(this.configPath, 'context.conf'),this.context_length)
+      if (this.enable_context.replaceAll(' ', '') == 'true')
+        return getContext(path.resolve(this.config_path, 'context.conf'), this.context_length)
       else {
         return ''
       }
     }
     this.addContext = (text) => {
-      return addContext(path.resolve(this.configPath, 'context.conf'), text, (path) => {
-        if ((new Date()).getTime() >= this.contextTime) {
+      return addContext(path.resolve(this.config_path, 'context.conf'), text, (path) => {
+        if ((new Date()).getTime() >= this.context_time) {
           fs.writeFileSync(path, '')
         }
-        this.contextTime = (new Date()).getTime() + this.contextTimeout
+        this.context_time = (new Date()).getTime() + parseInt(this.context_timeout)
       })
     }
   }
 
   get discord_key() {
 
-    return this.getter(this.configFile).get('discord_key', 'write a key here')
+    return this.getter(this.config_file).get('discord_key', 'write a key here')
   }
   get openai_key() {
-    return this.getter(this.configFile).get('openai_key', 'write a key here')
+    return this.getter(this.config_file).get('openai_key', 'write a key here')
   }
   get model() {
-    return this.getter(this.configFile).get('model', 'text-davinci-003')
+    return this.getter(this.config_file).get('model', 'text-davinci-003')
   }
   get temperature() {
-    return this.getter(this.configFile).get('temperature', '0.5')
+    return this.getter(this.config_file).get('temperature', '0.5')
   }
   get maxtokens() {
-    return this.getter(this.configFile).get('maxtokens', '128')
+    return this.getter(this.config_file).get('maxtokens', '128')
   }
   get enable_context() {
-    return this.getter(this.configFile).get('enable_context', 'true')
+    return this.getter(this.config_file).get('enable_context', 'true')
   }
   get context_length() {
-    return this.getter(this.configFile).get('context_length', '5')
+    return this.getter(this.config_file).get('context_length', '5')
+  }
+  get context_timeout() {
+    return this.getter(this.config_file).get('context_timeout', '120000')
   }
 }
 
@@ -87,7 +94,7 @@ export const setRoleplay = (text) => {
 }
 
 
-export const getContext = (path,length) => {
+export const getContext = (path, length) => {
   if (fs.existsSync(path)) {
     let textSplited = fs.readFileSync(path, 'utf-8').split('\n')
     console.log(textSplited)
@@ -95,8 +102,8 @@ export const getContext = (path,length) => {
     let parsed = ''
     textSplited.forEach((each, index) => {
       if (index >= textSplited.length - length) {
-        if(each.length > 0)
-        parsed += each + '\n'
+        if (each.length > 0)
+          parsed += each + '\n'
       }
     })
     return parsed
