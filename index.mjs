@@ -27,9 +27,9 @@ client.on('error', async (e) => {
 client.on('messageCreate', async message => {
   if (!message.author.bot) {
     logger.info('trying completion from ' +message.author.username + ', message: ' + message.content)
-    if (message.content.toLowerCase().startsWith('chat')) {
+    if (message.content.toLowerCase().startsWith('chat ')) {
       let sliced = message.content.slice(5, message.content.length)
-      let response = await chat(sliced, message.author.username)
+      let response = await chat(sliced, message)
       message.reply(response)
     }
   }

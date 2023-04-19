@@ -1,3 +1,6 @@
+import fs from 'fs'
+import { cfg } from './config.mjs'
+
 export class ContextManager{
     constructor(){
         this.contexts = {}
@@ -9,13 +12,15 @@ export class ContextManager{
         this.getContext = (id)=>{
             if(!this.contexts[id])return ''
             let res = ''
-            this.contexts[id].forEach(each=>{
+            this.contexts[id].forEach((each,index)=>{
+                if(index > this.contexts[id].length - cfg.context_length)
                 res += each + '\n'
             })
-            return res.slice(0,res.length -1)
+            console.log(this.contexts)
+            return res.slice(0,res.length)
         }
         this.setContext = (id,array)=>{
-            this.contexts[id] = []
+            this.contexts[id] = array
         }
     }
 }

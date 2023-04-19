@@ -73,6 +73,6 @@ function getRoleplay(path, name) {
   }
   else {
     fs.writeFileSync(path, 'me responda como um pirata triste e me chamando de #USER#')
-    return 'me responda como um pirata triste e me chamando de #USER#'.replaceAll('#USER#', name ?? 'onichan')
+    return 'me responda como um pirata triste e me chamando de #USER#'
   }
 }
