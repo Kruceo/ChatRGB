@@ -2,10 +2,13 @@ import fs, { mkdirSync, writeFileSync } from 'fs'
 import path, { parse } from 'path'
 import { getConfigObj, getDevKeys } from './utils.mjs'
 import { Logger } from 'madeira'
+import { ContextManager } from './context.mjs'
 export const logger = new Logger('./logs')
 
 class Config {
   constructor() {
+    //context manager
+    this.context_manager = new ContextManager()
     //resolve config paths
     this.config_path = path.resolve(process.cwd(), 'data', 'memory');
     if (process.argv.includes('-cp')) {
@@ -33,21 +36,6 @@ class Config {
 
     //roleplay and context getter with personalization like user name
     this.getRoleplay = (name) => { return getRoleplay(path.resolve(this.config_path, 'roleplay.conf'), name) }
-    this.getContext = () => {
-      if (this.enable_context.replaceAll(' ', '') == 'true')
-        return getContext(path.resolve(this.config_path, 'context.conf'), this.context_length)
-      else {
-        return ''
-      }
-    }
-    this.addContext = (text) => {
-      return addContext(path.resolve(this.config_path, 'context.conf'), text, (path) => {
-        if ((new Date()).getTime() >= this.context_time) {
-          fs.writeFileSync(path, '')
-        }
-        this.context_time = (new Date()).getTime() + parseInt(this.context_timeout)
-      })
-    }
   }
 
   get discord_key() {
@@ -87,30 +75,4 @@ function getRoleplay(path, name) {
     fs.writeFileSync(path, 'me responda como um pirata triste e me chamando de #USER#')
     return 'me responda como um pirata triste e me chamando de #USER#'.replaceAll('#USER#', name ?? 'onichan')
   }
-}
-
-export const getContext = (path, length) => {
-  if (fs.existsSync(path)) {
-    let textSplited = fs.readFileSync(path, 'utf-8').split('\n')
-    console.log(textSplited)
-
-    let parsed = ''
-    textSplited.forEach((each, index) => {
-      if (index >= textSplited.length - length) {
-        if (each.length > 0)
-          parsed += each + '\n'
-      }
-    })
-    return parsed
-  }
-  else {
-    fs.writeFileSync(path, '')
-    return 0.5
-  }
-}
-export const addContext = (path, text, beforeCallback) => {
-  beforeCallback ? beforeCallback(path) : null
-  fs.appendFileSync(path, text + '\n')
-  return
-
 }

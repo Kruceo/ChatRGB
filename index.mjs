@@ -21,7 +21,7 @@ client.on('ready', async () => {
 
 client.on('error', async (e) => {
   logger.error('[SVR] Error: \n' + e)
-  await getMainChannels(client).at(0).send('Deu ruim bicho  \n```' + e + '```')
+  // await getMainChannels(client).at(0).send('Deu ruim bicho  \n```' + e + '```')
 })
 
 client.on('messageCreate', async message => {
