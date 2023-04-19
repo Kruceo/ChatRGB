@@ -1,7 +1,7 @@
 
 import { Client, GatewayIntentBits } from 'discord.js';
 import { chat } from './src/chatGPT.mjs';
-import { cfg, setRoleplay,logger } from './src/config.mjs';
+import { cfg,logger } from './src/config.mjs';
 
 export const client = new Client(
   {
@@ -15,7 +15,7 @@ export const client = new Client(
   });
 
 client.on('ready', async () => {
-  logger.done('[SVR] logged with ' + client.user.username)
+  logger.done('logged with ' + client.user.username)
   // models()
 })
 
@@ -38,7 +38,7 @@ client.on('messageCreate', async message => {
 login()
 
 function login() {
-  logger.info('[SVR] trying to login...')
+  logger.info('trying to login...')
   client.login(cfg.discord_key).catch((err) => {
     logger.error(err)
     logger.info('Trying again in 10 seconds')

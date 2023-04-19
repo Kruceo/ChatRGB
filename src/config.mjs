@@ -89,11 +89,6 @@ function getRoleplay(path, name) {
   }
 }
 
-export const setRoleplay = (text) => {
-  fs.writeFileSync('./data/memory/roleplay.conf', text)
-}
-
-
 export const getContext = (path, length) => {
   if (fs.existsSync(path)) {
     let textSplited = fs.readFileSync(path, 'utf-8').split('\n')
