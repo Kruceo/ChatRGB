@@ -18,9 +18,12 @@ export async function chat(message,raw) {
   const contextID = "G"+raw.guild.id+'C'+ raw.channel.id
   const botName = 'Bot'
   const userName = 'User'
+
+  const context = cfg.enable_context == 'true'?cfg.context_manager.getContext(contextID):''
+
   const config = {
-    model: cfg.model ?? "text-davinci-003",
-    prompt: cfg.context_manager.getContext(contextID) + userName + ': ' + message + '\n' + cfg.getRoleplay().replaceAll('#USER#',raw.author.username),
+    model: cfg.model ?? "text-davinci-001",
+    prompt: context + userName + ': ' + message + '\n' + cfg.getRoleplay().replaceAll('#USER#',raw.author.username),
     max_tokens: parseInt(cfg.maxtokens),
     temperature: parseFloat(cfg.temperature),
     n: 1
