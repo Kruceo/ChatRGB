@@ -5,12 +5,19 @@ import path from 'path'
 
 export class RoleplayManager {
     constructor(config_path) {
-        console.log(config_path)
         const roleplayPath = path.resolve(config_path, 'roleplay.conf')
-
+        const setDefault = () => {
+            const text = '{"any":"me responda como um pirata triste se referindo a mim por uma apelido para #USER#"}'
+            fs.writeFileSync(roleplayPath, text)
+            return text
+        }
         function getRoleplaysFromFiles() {
-            console.log('getting')
-            const obj = JSON.parse(fs.readFileSync(roleplayPath))
+            if (!fs.existsSync(roleplayPath)) setDefault()
+            let file = fs.readFileSync(roleplayPath, 'utf-8')
+            if (!file.endsWith('}') || !file.startsWith('{')) {
+                file = setDefault()
+            }
+            const obj = JSON.parse(file)
             return obj
         }
 
@@ -21,7 +28,7 @@ export class RoleplayManager {
 
         this.getRoleplay = (id) => {
             this.roleplays = getRoleplaysFromFiles()
-            if (!this.roleplays[id]) return ''
+            if (!this.roleplays[id]) return this.roleplays.any
             return this.roleplays[id]
         }
         this.setRoleplay = (id, text) => {

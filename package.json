@@ -5,7 +5,7 @@
     "openai": "^3.2.1"
   },
   "name": "chatrgb",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.mjs dev"
