@@ -1,7 +1,8 @@
 
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { chat } from './src/chatGPT.mjs';
 import { cfg,logger } from './src/config.mjs';
+import initCommands from './src/commands.mjs';
 
 export const client = new Client(
   {
@@ -15,12 +16,13 @@ export const client = new Client(
   });
 
 client.on('ready', async () => {
+  initCommands(client)
   logger.done('logged with ' + client.user.username)
   // models()
 })
 
 client.on('error', async (e) => {
-  logger.error('[SVR] Error: \n' + e)
+  logger.error(e.name  + '\n' + e.message + '\n' + e.stack)
   // await getMainChannels(client).at(0).send('Deu ruim bicho  \n```' + e + '```')
 })
 

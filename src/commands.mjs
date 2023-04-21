@@ -1,0 +1,37 @@
+import { ApplicationCommandOptionType, Client, InteractionType } from "discord.js";
+import { cfg } from "./config.mjs";
+
+/**
+ * Init the commands at each guild
+ * @param {Client} client 
+ */
+export default async function initCommands(client) {
+
+
+    ((await client.application.commands.fetch()).clear())
+    client.guilds.cache.forEach(async element => {
+        (await element.commands.fetch()).clear()
+    })
+
+    await client.application.commands.create(
+        {
+            name:'setroleplay',
+            description:'set the channel roleplay',
+            options:[{
+                name:"roleplay",
+                description:'The roleplay that the bot will use',
+                type:ApplicationCommandOptionType.String,
+                required:true
+            }]
+        })
+
+    client.on('interactionCreate',async (data) => {
+        if (data.commandName == 'setroleplay') {
+            const text = await (data.options.getString('roleplay'))
+            
+            cfg.roleplay_manager.setRoleplay('G'+data.guildId + 'C' + data.channelId,text)
+
+            data.reply('ok')
+        }
+    })
+}
