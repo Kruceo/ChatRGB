@@ -23,7 +23,7 @@ export async function chat(message,raw) {
 
   const config = {
     model: cfg.model ?? "text-davinci-001",
-    prompt: context + userName + ': ' + message + '\n' + cfg.getRoleplay().replaceAll('#USER#',raw.author.username),
+    prompt: context + userName + ': ' + message + '\n' + cfg.roleplay_manager.getRoleplay('A1').replaceAll('#USER#',raw.author.username),
     max_tokens: parseInt(cfg.maxtokens),
     temperature: parseFloat(cfg.temperature),
     n: 1
@@ -49,6 +49,4 @@ export async function chat(message,raw) {
   } catch (error) {
     logger.error(error)
   }
-
-
 }

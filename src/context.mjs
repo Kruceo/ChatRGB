@@ -2,7 +2,7 @@ import fs from 'fs'
 import { cfg } from './config.mjs'
 
 export class ContextManager{
-    constructor(){
+    constructor(config_path){
         this.contexts = {}
 
         this.appendContext = (id,text)=>{
