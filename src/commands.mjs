@@ -16,7 +16,7 @@ export default async function initCommands(client) {
     await client.application.commands.create(
         {
             name:'setroleplay',
-            description:'set the channel roleplay',
+            description:'Set the channel roleplay',
             options:[{
                 name:"roleplay",
                 description:'The roleplay that the bot will use',
@@ -25,6 +25,12 @@ export default async function initCommands(client) {
             }]
         })
 
+        await client.application.commands.create(
+            {
+                name:'getroleplay',
+                description:'Get the channel roleplay',
+            })
+
     client.on('interactionCreate',async (data) => {
         if (data.commandName == 'setroleplay') {
             const text = await (data.options.getString('roleplay'))
@@ -32,6 +38,9 @@ export default async function initCommands(client) {
             cfg.roleplay_manager.setRoleplay('G'+data.guildId + 'C' + data.channelId,text)
 
             data.reply('ok')
+        }
+        if (data.commandName == 'getroleplay') {
+            data.reply(cfg.roleplay_manager.getRoleplay('G'+data.guildId+'C'+data.channelId))
         }
     })
 }

@@ -4,7 +4,7 @@ import { getConfigObj } from './utils.mjs'
 import { Logger } from 'madeira'
 
 import { RoleplayManager } from './RoleplayManager.mjs'
-import { ContextManager } from './context.mjs'
+import { ContextManager } from './ContextManager.mjs'
 
 export const logger = new Logger('./logs')
 
@@ -29,7 +29,7 @@ class Config {
 
     //managers
     this.roleplay_manager = new RoleplayManager(this.config_path)
-    this.context_manager = new ContextManager(this.config_path)
+    this.context_manager = new ContextManager()
 
     //set the getter method
     this.getter = getConfigObj;
@@ -75,13 +75,3 @@ class Config {
 }
 
 export const cfg = new Config()
-
-function getRoleplay(path, name) {
-  if (fs.existsSync(path)) {
-    return fs.readFileSync(path, 'utf-8').replaceAll('#USER#', name ?? 'onichan')
-  }
-  else {
-    fs.writeFileSync(path, 'me responda como um pirata triste e me chamando de #USER#')
-    return 'me responda como um pirata triste e me chamando de #USER#'
-  }
-}

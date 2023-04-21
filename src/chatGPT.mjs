@@ -8,7 +8,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 /**
- * 
+ * sends a completion request and return the response
  * @param {string} message 
  * @param {Message} raw 
  * @returns 
