@@ -20,7 +20,6 @@ This will generate a "data/memory" folders, this paths will contain the configur
 ```js
 /* ./data/memory/config.conf */
 discord_key=xxx-xxx-xxx    //your discord key
-openai_key=xxx-xxx-xxx     //your openAI key
 model=text-davinci-003     //Open AI model
 maxtokens=128              //max tokens to be burned at request  
 temperature=0.5            //like creativity
