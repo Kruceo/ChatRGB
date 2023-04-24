@@ -9,7 +9,7 @@ import { KeyManager } from './managers/KeyManager.mjs'
 
 export const logger = new Logger('./logs')
 
-logger.info("Running version: " + JSON.parse(fs.readFileSync('./package.json')).version)
+logger.info("running version: " + JSON.parse(fs.readFileSync('./package.json')).version)
 
 class Config {
   constructor() {
@@ -43,7 +43,6 @@ class Config {
     this.context_time = (new Date()).getTime() + parseInt(this.context_timeout);
 
     //roleplay and context getter with personalization like user name
-
   }
 
   get get_config_path() {

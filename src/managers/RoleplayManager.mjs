@@ -6,7 +6,7 @@ export class RoleplayManager {
     constructor(config_path) {
         const roleplayPath = path.resolve(config_path, 'roleplay.conf')
         const setDefault = () => {
-            const text = '{"any":"me responda como um samurai mongol se referindo a mim por uma apelido para #USER#"}'
+            const text = '{"any":"me responda como um samurai mongol se referindo a mim por um apelido para #USER#"}'
             fs.writeFileSync(roleplayPath, text)
             return text
         }

@@ -9,7 +9,7 @@ import { Message } from 'discord.js';
  * @param {Message} raw 
  * @returns 
  */
-export function genClientID(raw){
+export function genChannelID(raw){
   return "G" + raw.guild.id + 'C' + raw.channel.id
 }
 

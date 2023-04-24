@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType, Client, InteractionType } from "discord.js";
-import {genClientID} from './utils.mjs'
+import {genChannelID} from './utils.mjs'
 import { cfg } from "./config.mjs";
 
 
@@ -49,12 +49,12 @@ export default async function initCommands(client) {
         if (data.commandName == 'setroleplay') {
             const text = await (data.options.getString('roleplay'))
 
-            cfg.roleplay_manager.setRoleplay(genClientID(data), text)
+            cfg.roleplay_manager.setRoleplay(genChannelID(data), text)
 
             data.reply('ok')
         }
         if (data.commandName == 'getroleplay') {
-            data.reply(cfg.roleplay_manager.getRoleplay(genClientID(data)))
+            data.reply(cfg.roleplay_manager.getRoleplay(genChannelID(data)))
         }
         if (data.commandName == 'setkey') {
             const key = await (data.options.getString('key'))??"not defined"

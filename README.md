@@ -24,11 +24,11 @@ model=text-davinci-003     //Open AI model
 maxtokens=128              //max tokens to be burned at request  
 temperature=0.5            //like creativity
 enable_context=true        //enable context history, maybe cost more tokens per message
-context_length=5           //the number of past messages that the bot will remember
+context_length=5           //the number of old messages that the bot will remember
 context_timeout=120000     //the time in millis to the bot forget history 
 ```
 
-You dont need restart the process to the config update, just change the file
+You don't need restart the process to update the config, just change the file.
 
 <br>
 <br>
