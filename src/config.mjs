@@ -5,6 +5,7 @@ import { Logger } from 'madeira'
 
 import { RoleplayManager } from './RoleplayManager.mjs'
 import { ContextManager } from './ContextManager.mjs'
+import { KeyManager } from './KeyManager.mjs'
 
 export const logger = new Logger('./logs')
 
@@ -30,6 +31,7 @@ class Config {
     //managers
     this.roleplay_manager = new RoleplayManager(this.config_path)
     this.context_manager = new ContextManager()
+    this.key_manager = new KeyManager(this.config_path)
 
     //set the getter method
     this.getter = getConfigObj;
@@ -50,9 +52,6 @@ class Config {
   get discord_key() {
 
     return this.getter(this.config_file).get('discord_key', 'write a key here')
-  }
-  get openai_key() {
-    return this.getter(this.config_file).get('openai_key', 'write a key here')
   }
   get model() {
     return this.getter(this.config_file).get('model', 'text-davinci-003')

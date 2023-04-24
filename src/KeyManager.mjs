@@ -1,5 +1,8 @@
+import fs from 'fs'
+import path from 'path';
+
 export class KeyManager {
-    constructor() {
+    constructor(savePath) {
         /**
          * Keys DB
          * @type {Key[]}
@@ -14,9 +17,12 @@ export class KeyManager {
             })
             if (selector >= 0) this.keys[selector].key = key;
             else this.keys.push(new Key(guildID, key));
+
+            fs.writeFileSync(path.resolve(savePath,'keys.conf'),JSON.stringify(this.keys))            
         }
 
         this.get = (guildID) => {
+            this.keys = JSON.parse(fs.readFileSync(path.resolve(savePath,'keys.conf'),'utf-8'))
             const selector = this.keys.filter(each => {
                 if (each.guild == guildID) {
                     return each

@@ -19,7 +19,7 @@ This will generate a "data/memory" folders, this paths will contain the configur
 
 ```js
 /* ./data/memory/config.conf */
-discord_key=xxx-xxx-x      //your discord key
+discord_key=xxx-xxx-xxx    //your discord key
 openai_key=xxx-xxx-xxx     //your openAI key
 model=text-davinci-003     //Open AI model
 maxtokens=128              //max tokens to be burned at request  
@@ -30,20 +30,6 @@ context_timeout=120000     //the time in millis to the bot forget history
 ```
 
 You dont need restart the process to the config update, just change the file
-
-<br>
-<br>
-
-## **Roleplay.conf**
-
-Just write the file like a sufix to the question, like this:
-
-```js
-/* ./data/memory/roleplay.conf */
-Respond like a sad pirate and call me by #USER#
-```
-
-***#USER#*** will be replaced with the message author name. 
 
 <br>
 <br>

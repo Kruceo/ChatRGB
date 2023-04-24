@@ -1,5 +1,4 @@
 import fs from 'fs'
-import { cfg } from './config.mjs'
 import path from 'path'
 
 
@@ -17,6 +16,7 @@ export class RoleplayManager {
             if (!file.endsWith('}') || !file.startsWith('{')) {
                 file = setDefault()
             }
+            console.log(file)
             const obj = JSON.parse(file)
             return obj
         }
