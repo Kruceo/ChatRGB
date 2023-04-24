@@ -1,6 +1,6 @@
 
 import { Client, GatewayIntentBits } from 'discord.js';
-import { chat } from './src/chatGPT.mjs';
+import { chat } from './src/bot/chatGPT.mjs';
 import { cfg,logger } from './src/config.mjs';
 import initCommands from './src/commands.mjs';
 

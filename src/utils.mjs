@@ -2,7 +2,16 @@
 import fs from 'fs'
 import path from 'path';
 import { logger } from './config.mjs';
+import { Message } from 'discord.js';
 
+/**
+ * 
+ * @param {Message} raw 
+ * @returns 
+ */
+export function genClientID(raw){
+  return "G" + raw.guild.id + 'C' + raw.channel.id
+}
 
 export function getMainChannels(client) {
   const channels = client.channels.cache.filter(each => {
@@ -38,7 +47,7 @@ export function getConfigObj(path) {
     const [prop, value] = each.split('=')
     if (prop == undefined || value == undefined) {
       if(prop.length==0)return null
-      logger.warn('[SVR] The config.env have undefined itens. \n  {' + prop + '=' + value + '} => This can cause errors!')
+      logger.warn('The config.env have undefined itens. \n  {' + prop + '=' + value + '} => This can cause errors!')
     }
     obj.data[prop] = value
   })

@@ -1,7 +1,8 @@
 
-import { cfg, logger } from "./config.mjs";
+import { cfg, logger } from "../config.mjs";
 import { Configuration, OpenAIApi } from "openai"
 import { Message } from "discord.js";
+import { genClientID } from "../utils.mjs";
 
 
 /**
@@ -20,7 +21,7 @@ export async function chat(message, raw) {
   const openai = new OpenAIApi(configuration);
 
   //this api auth
-  const clientID = "G" + raw.guild.id + 'C' + raw.channel.id
+  const clientID = genClientID(raw)
   const botName = 'Bot'
   const userName = 'User'
 

@@ -3,9 +3,9 @@ import path from 'path'
 import { getConfigObj } from './utils.mjs'
 import { Logger } from 'madeira'
 
-import { RoleplayManager } from './RoleplayManager.mjs'
-import { ContextManager } from './ContextManager.mjs'
-import { KeyManager } from './KeyManager.mjs'
+import { RoleplayManager } from './managers/RoleplayManager.mjs'
+import { ContextManager } from './managers/ContextManager.mjs'
+import { KeyManager } from './managers/KeyManager.mjs'
 
 export const logger = new Logger('./logs')
 

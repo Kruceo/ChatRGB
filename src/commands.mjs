@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType, Client, InteractionType } from "discord.js";
+import {genClientID} from './utils.mjs'
 import { cfg } from "./config.mjs";
-import { chat } from "./chatGPT.mjs";
+
 
 /**
  * Init the commands at each guild
@@ -48,12 +49,12 @@ export default async function initCommands(client) {
         if (data.commandName == 'setroleplay') {
             const text = await (data.options.getString('roleplay'))
 
-            cfg.roleplay_manager.setRoleplay('G' + data.guildId + 'C' + data.channelId, text)
+            cfg.roleplay_manager.setRoleplay(genClientID(data), text)
 
             data.reply('ok')
         }
         if (data.commandName == 'getroleplay') {
-            data.reply(cfg.roleplay_manager.getRoleplay('G' + data.guildId + 'C' + data.channelId))
+            data.reply(cfg.roleplay_manager.getRoleplay(genClientID(data)))
         }
         if (data.commandName == 'setkey') {
             const key = await (data.options.getString('key'))??"not defined"

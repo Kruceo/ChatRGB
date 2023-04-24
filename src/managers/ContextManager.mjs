@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { cfg } from './config.mjs'
+import { cfg } from '../config.mjs'
 
 export class ContextManager{
     constructor(config_path){
