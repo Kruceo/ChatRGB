@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType, Client, InteractionType } from "discord.js";
-import {genChannelID} from './utils.mjs'
+import { genChannelID } from './utils.mjs'
 import { cfg } from "./config.mjs";
+import { chat } from "./bot/chatGPT.mjs";
 
 
 /**
@@ -44,6 +45,11 @@ export default async function initCommands(client) {
                 required: true
             }]
         })
+    await client.application.commands.create(
+        {
+            name: 'help',
+            description: 'show a the ChatRGB command list',
+        })
 
     client.on('interactionCreate', async (data) => {
         if (data.commandName == 'setroleplay') {
@@ -57,9 +63,22 @@ export default async function initCommands(client) {
             data.reply(cfg.roleplay_manager.getRoleplay(genChannelID(data)))
         }
         if (data.commandName == 'setkey') {
-            const key = await (data.options.getString('key'))??"not defined"
-            cfg.key_manager.push(data.guildId,key)
+            const key = await (data.options.getString('key')) ?? "not defined"
+            cfg.key_manager.push(data.guildId, key)
             data.reply('Key as applied, test using "chat hello"')
+        }
+        if (data.commandName == 'help') {
+            data.reply(
+`# Welcome to the help!
+
+To start a chat, simply type \`chat\` followed by your message. For example, if you want to say "Good morning", just type \`chat Good morning\`.
+
+If you need to set a new API key, simply send \`/setkey\` followed by your new API key. For example, if your new API key is \`"MyNewAPIKey"\`, type \`/setkey key:MyNewAPIKey\`.
+
+To set a new roleplay, send \`/setroleplay\` followed by your new roleplay. For example, if you want to roleplay as a Japan samurai and respond accordingly, type \`/setroleplay roleplay:respond like a Japan samurai\`.
+
+If you need further assistance, don't hesitate to ask!
+`)
         }
     })
 }
