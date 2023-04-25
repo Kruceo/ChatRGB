@@ -1,8 +1,10 @@
 import fs from 'fs'
 import path from 'path';
+import { logger } from '../config.mjs';
 
 export class KeyManager {
     constructor(savePath) {
+        const keysFile = path.resolve(savePath,'keys.conf')
         /**
          * Keys DB
          * @type {Key[]}
@@ -18,17 +20,27 @@ export class KeyManager {
             if (selector >= 0) this.keys[selector].key = key;
             else this.keys.push(new Key(guildID, key));
 
-            fs.writeFileSync(path.resolve(savePath,'keys.conf'),JSON.stringify(this.keys))            
+            fs.writeFileSync(keysFile,JSON.stringify(this.keys))            
         }
 
         this.get = (guildID) => {
-            this.keys = JSON.parse(fs.readFileSync(path.resolve(savePath,'keys.conf'),'utf-8'))
+            if(!fs.existsSync(keysFile)){
+                return null
+            }
+            try {
+                this.keys = JSON.parse(fs.readFileSync(keysFile,'utf-8'))
+            } catch (error) {
+                logger.error(error)
+                return null
+            }
+            
             const selector = this.keys.filter(each => {
                 if (each.guild == guildID) {
                     return each
                 }
             });
-            if (selector.length > 0) return selector[0];
+            if (selector.length > 0) return selector[0].key;
+            return null
         }
     }
 }

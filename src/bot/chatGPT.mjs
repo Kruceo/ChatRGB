@@ -13,7 +13,7 @@ import { genChannelID } from "../utils.mjs";
  */
 export async function chat(message, raw) {
   //openAI auth
-  const apiKey = cfg.key_manager.get(raw.guildId).key
+  const apiKey = cfg.key_manager.get(raw.guildId)
   if (!apiKey) return "Your server don't have a api key, take a see in OpenAI API website to get one!\n ```https://platform.openai.com/account/api-keys```"
   const configuration = new Configuration({
     apiKey
