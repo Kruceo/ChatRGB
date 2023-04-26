@@ -9,7 +9,7 @@ export class KeyManager {
          * Keys DB
          * @type {Key[]}
          */
-        this.keys = [];
+        this.keys = JSON.parse(fs.readFileSync(keysFile));
         this.push = (guildID, key) => {
             let selector = -1;
             this.keys.forEach((each, index) => {
@@ -27,12 +27,12 @@ export class KeyManager {
             if(!fs.existsSync(keysFile)){
                 return null
             }
-            try {
-                this.keys = JSON.parse(fs.readFileSync(keysFile,'utf-8'))
-            } catch (error) {
-                logger.error(error)
-                return null
-            }
+            // try {
+            //     this.keys = JSON.parse(fs.readFileSync(keysFile,'utf-8'))
+            // } catch (error) {
+            //     logger.error(error)
+            //     return null
+            // }
             
             const selector = this.keys.filter(each => {
                 if (each.guild == guildID) {

@@ -21,13 +21,13 @@ export class RoleplayManager {
             return obj
         }
 
-        this.roleplays = {}
+        this.roleplays = getRoleplaysFromFiles()??{}
         if (!fs.existsSync(roleplayPath)) {
             this.roleplays = getRoleplaysFromFiles()
         }
 
         this.getRoleplay = (id) => {
-            this.roleplays = getRoleplaysFromFiles()
+            // this.roleplays = getRoleplaysFromFiles()
             if (!this.roleplays[id]) return this.roleplays.any
             return this.roleplays[id]
         }
