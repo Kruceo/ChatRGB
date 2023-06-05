@@ -3,6 +3,7 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import { chat } from './src/bot/chatGPT.mjs';
 import { cfg,logger } from './src/config.mjs';
 import initCommands from './src/commands.mjs';
+import AvatarManager from './src/managers/AvatarManager.mjs';
 
 export const client = new Client(
   {
@@ -17,6 +18,7 @@ export const client = new Client(
 
 client.on('ready', async () => {
   initCommands(client)
+  const avatarUpdater = new AvatarManager(client)
   logger.done('logged with ' + client.user.username)
   // models()
 })
@@ -36,6 +38,7 @@ client.on('messageCreate', async message => {
     }
   }
 })
+
 
 login()
 
