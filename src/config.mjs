@@ -70,6 +70,9 @@ class Config {
   get context_timeout() {
     return this.getter(this.config_file).get('context_timeout', '120000')
   }
+  get avatar_search() {
+    return this.getter(this.config_file).get('avatar_search', 'kawai-bot').replaceAll(' ','-')
+  }
 }
 
 export const cfg = new Config()
