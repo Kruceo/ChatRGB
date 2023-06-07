@@ -16,7 +16,7 @@ export class RoleplayManager {
             if (!file.endsWith('}') || !file.startsWith('{')) {
                 file = setDefault()
             }
-            console.log(file)
+            // console.log(file)
             const obj = JSON.parse(file)
             return obj
         }

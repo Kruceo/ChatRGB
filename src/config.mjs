@@ -6,6 +6,7 @@ import { Logger } from 'madeira'
 import { RoleplayManager } from './managers/RoleplayManager.mjs'
 import { ContextManager } from './managers/ContextManager.mjs'
 import { KeyManager } from './managers/KeyManager.mjs'
+import AvatarManager from './managers/AvatarManager.mjs'
 
 export const logger = new Logger('./logs')
 
@@ -32,6 +33,7 @@ class Config {
     this.roleplay_manager = new RoleplayManager(this.config_path)
     this.context_manager = new ContextManager()
     this.key_manager = new KeyManager(this.config_path)
+    this.avatar_manager = new AvatarManager()
 
     //set the getter method
     this.getter = getConfigObj;
@@ -72,6 +74,12 @@ class Config {
   }
   get avatar_search() {
     return this.getter(this.config_file).get('avatar_search', 'kawai-bot').replaceAll(' ','-')
+  }
+  get bot_name() {
+    return this.getter(this.config_file).get('bot_name', 'chat')
+  }
+  get lang() {
+    return this.getter(this.config_file).get('lang', 'portuguese')
   }
 }
 

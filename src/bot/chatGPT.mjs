@@ -29,29 +29,20 @@ export async function chat(message, raw) {
   const roleplay = cfg.roleplay_manager.getRoleplay(clientID).replaceAll('#USER#', raw.author.username)
   const config = {
     model: cfg.model ?? "text-davinci-002",
-    prompt:`The following is a roleplay.We are in a group chat. ${roleplay}.\n\n${context}${userName}:${message}\n${botName}:[your message]`,
+    prompt: `The following is a roleplay.We are in a group chat. ${roleplay}.In ${cfg.lang}.\n\n${context}${userName}:${message}\n${botName}:[your message]`,
     max_tokens: parseInt(cfg.maxtokens),
     temperature: parseFloat(cfg.temperature),
     n: 1
   }
 
   cfg.context_manager.appendContext(clientID, userName + ': ' + message)
-  logger.info('\n'+config.prompt)
+  logger.info('\n' + config.prompt)
   try {
     const response = await openai.createCompletion(config);
     let text = response.data.choices[0].text.trim()
     logger.done('raw response: ' + text.replaceAll('\n', ' '))
-
-    if (text.startsWith(botName + ': ')) {
-      text = text.replace(botName + ": ", '')
-    }
-    // if (':.?,!#"\''.indexOf(text.toLowerCase()[0]) !== -1) {
-    //   text = text.slice(1,text.length);
-    // }
-    // if (':"\''.indexOf(text.toLowerCase()[text.length-1]) !== -1) {
-    //   text = text.slice(0,text.length-2);
-    // }
-    text = text.trim()
+    
+    text = filterMessage(text)
 
     cfg.context_manager.appendContext(clientID, botName + ': ' + text.replaceAll('\n', ' '))
     logger.done('parsed response: ' + text.replaceAll('\n', ' '))
@@ -60,4 +51,14 @@ export async function chat(message, raw) {
   } catch (error) {
     logger.error(error)
   }
+}
+
+
+function filterMessage(text) {
+  const userRegex = /^.*:/
+  if (userRegex.test(text)) {
+    text.replace(userRegex.exec(text)[0], '')
+  }
+  text = text.trim()
+  return text
 }

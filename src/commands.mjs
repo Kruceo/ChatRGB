@@ -51,16 +51,29 @@ export default async function initCommands(client) {
             description: 'show a the ChatRGB command list',
         })
 
+    await client.application.commands.create(
+        {
+            name: 'clearcontext',
+            description: 'clear the channel context, like forget the history.',
+        })
+
     client.on('interactionCreate', async (data) => {
         if (data.commandName == 'setroleplay') {
             const text = await (data.options.getString('roleplay'))
 
+            cfg.avatar_manager.client = data.client
+            cfg.avatar_manager.getNewImage(text)
             cfg.roleplay_manager.setRoleplay(genChannelID(data), text)
 
             data.reply('ok')
         }
         if (data.commandName == 'getroleplay') {
             data.reply(cfg.roleplay_manager.getRoleplay(genChannelID(data)))
+        }
+        if (data.commandName == 'clearcontext') {
+
+            cfg.context_manager.setContext(genChannelID(data), [])
+            data.reply('ok')
         }
         if (data.commandName == 'setkey') {
             const key = await (data.options.getString('key')) ?? "not defined"
@@ -69,7 +82,7 @@ export default async function initCommands(client) {
         }
         if (data.commandName == 'help') {
             data.reply(
-`# Welcome to the help!
+                `# Welcome to the help!
 
 To start a chat, simply type \`chat\` followed by your message. For example, if you want to say "Good morning", just type \`chat Good morning\`.
 

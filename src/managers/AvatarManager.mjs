@@ -3,28 +3,45 @@ import { cfg, logger } from "../config.mjs"
 export default class AvatarManager {
     constructor(client) {
         this.client = client
-        this.changeAvatarCycle()
+        this.timer = ((60 * 60) / 150) * 1000
+
         this.stopped = false
+
+        this.next = ''
+        this.old = ''
+        this.cycle()
     }
 
-    async changeAvatarCycle() {
+    async getNewImage(search) {
         try {
+            const req = await fetch('https://tenor.com/pt-BR/search/' + search + '-gifs')
+            const text = await req.text()
+            const matches = text.match(/https:\/\/media\.tenor\.com\/([^"]*?)\.gif/g)
+            const random = Math.round(Math.random() * matches.length)
+            const selection = matches[random]
+            this.next = selection
 
-            setTimeout(async () => {
-                const req = await fetch('https://tenor.com/pt-BR/search/' + cfg.avatar_search + '-gifs')
-                const text = await req.text()
-                const matches = text.match(/https:\/\/media\.tenor\.com\/([^"]*?)\.gif/g)
-                const random = Math.floor(Math.random() * matches.length)
-                const selection = matches[random]
-                if (this.client && this.client.user) this.client.user.setAvatar(selection)
-                logger.info('New avatar: ' + selection)
-                this.changeAvatarCycle()
-            },
-                12 * 3600 * 1000
-            )
         } catch (error) {
             logger.error('Error on avatar change')
         }
+    }
 
+    cycle() {
+        // console.log(this.timer)
+        // console.log('proximo ciclo :' + new Date((new Date()).getTime() + this.timer))
+        setTimeout(async () => {
+
+            if (this.client && this.client.user) {
+                if (this.old != this.next) {
+                    this.client.user.setAvatar(this.next)
+                    logger.info('New avatar: ' + this.next)
+                    this.old = this.next
+                }
+            }
+            else{
+                logger.warn('Avatar Manager: Undefined client')
+            }
+            this.cycle()
+        }, this.timer)
     }
 }

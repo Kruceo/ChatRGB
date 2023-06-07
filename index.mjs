@@ -18,7 +18,7 @@ export const client = new Client(
 
 client.on('ready', async () => {
   initCommands(client)
-  const avatarUpdater = new AvatarManager(client)
+ 
   logger.done('logged with ' + client.user.username)
   // models()
 })
@@ -30,8 +30,8 @@ client.on('error', async (e) => {
 
 client.on('messageCreate', async message => {
   if (!message.author.bot) {
-    logger.info('trying completion from ' +message.author.username + ', message: ' + message.content)
-    if (message.content.toLowerCase().startsWith('chat ')) {
+    if (message.content.toLowerCase().startsWith(cfg.bot_name.trim() +' ')) {
+      logger.info('trying completion from ' +message.author.username + ', message: ' + message.content)
       let sliced = message.content.slice(5, message.content.length)
       let response = await chat(sliced, message)
       message.reply(response)

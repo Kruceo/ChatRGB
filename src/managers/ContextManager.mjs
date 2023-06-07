@@ -28,7 +28,7 @@ export class ContextManager {
                 if (index > this.contexts[id].text.length - cfg.context_length)
                     res += each + '\n'
             })
-            console.log(this.contexts[id].text)
+            // console.log(this.contexts[id].text)
             logger.warn('time: ' + this.contexts[id].timer + ' / ' + (new Date()).getTime())
             return res.slice(0, res.length)
         }
