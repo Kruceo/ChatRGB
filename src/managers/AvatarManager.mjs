@@ -13,8 +13,16 @@ export default class AvatarManager {
     }
 
     async getNewImage(search) {
+        const regex = 'respond responda fale fala talk like como um uma a o'
+        const s = search.split(' ').reduce((acum,next)=>{
+            if(!regex.includes(next)){
+                return acum +' '+ next
+            }
+            else return acum + ''
+        },'').trim()
+        console.log('search',s)
         try {
-            const req = await fetch('https://tenor.com/pt-BR/search/' + search + '-gifs')
+            const req = await fetch('https://tenor.com/pt-BR/search/' + s + '-gifs')
             const text = await req.text()
             const matches = text.match(/https:\/\/media\.tenor\.com\/([^"]*?)\.gif/g)
             const random = Math.round(Math.random() * matches.length)
