@@ -4,22 +4,20 @@ export default class AvatarManager {
     constructor(client) {
         this.client = client
         this.timer = ((60 * 60) / 150) * 1000
-
         this.stopped = false
-
         this.next = ''
         this.old = ''
         this.cycle()
     }
 
     async getNewImage(search) {
-        const regex = 'respond responda fale fala talk like como um uma a o'
+        const regex = 'respond responda fale fala talk like como um uma a o de da voce nos do nome com with name we of'
         const s = search.split(' ').reduce((acum,next)=>{
             if(!regex.includes(next)){
                 return acum +' '+ next
             }
             else return acum + ''
-        },'').trim()
+        },'').trim().replaceAll('/','-')
         console.log('search',s)
         try {
             const req = await fetch('https://tenor.com/pt-BR/search/' + s + '-gifs')

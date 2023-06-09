@@ -32,9 +32,10 @@ client.on('messageCreate', async message => {
   if (!message.author.bot) {
     if (message.content.toLowerCase().startsWith(cfg.bot_name.trim() +' ')) {
       logger.info('trying completion from ' +message.author.username + ', message: ' + message.content)
-      let sliced = message.content.slice(5, message.content.length)
+      let sliced = message.content.slice(cfg.bot_name.trim().length + 1, message.content.length)
+      message.channel.sendTyping()
       let response = await chat(sliced, message)
-      message.reply(response)
+      message.channel.send({content:response})
     }
   }
 })
