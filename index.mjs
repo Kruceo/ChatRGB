@@ -1,7 +1,10 @@
-
 import { Client, GatewayIntentBits } from 'discord.js';
 import { messageHandler } from './src/messageHandler.mjs';
 import { roleplayCommandHandler } from './src/commands.mjs';
+import dotenv from 'dotenv'
+
+dotenv.configDotenv()
+
 export const client = new Client(
   {
     intents:

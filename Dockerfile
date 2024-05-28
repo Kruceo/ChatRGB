@@ -8,7 +8,7 @@ COPY index.mjs index.mjs
 
 COPY package.json package.json
 
-run apt update && apt install git -y 
+RUN apt update && apt install git -y 
 
 RUN npm i
 
