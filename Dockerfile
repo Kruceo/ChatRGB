@@ -1,10 +1,18 @@
 FROM node:19-bullseye-slim
-RUN apt update -y
-RUN apt install git -y
-RUN echo "#!/bin/bash" > start.sh
-RUN echo "rm /chatrgb -r" >> start.sh
-RUN echo "git clone https://github.com/Kruceo/ChatRGB.git /chatrgb" >> start.sh
-RUN echo "cd /chatrgb" >> start.sh
-RUN echo "npm i" >> start.sh
-RUN echo "node index.mjs -cp /tmp/chatrgb" >> start.sh
-ENTRYPOINT [ "/bin/bash" ,"/start.sh" ]
+
+WORKDIR /chatrgb
+
+COPY src src
+
+COPY index.mjs index.mjs
+
+COPY package.json package.json
+
+run apt update && apt install git -y 
+
+RUN npm i
+
+ENV GENAI_TOKEN=PUT_YOUR_GEN_AI_TOKEN
+ENV DISC_TOKEN=PUT_YOUR_BOT_TOKEN
+
+ENTRYPOINT [ "node" ,"index.mjs" ]

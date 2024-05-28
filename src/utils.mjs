@@ -1,55 +1,18 @@
-// import { client } from "../index.mjs";
-import fs from 'fs'
-import path from 'path';
-import { logger } from './config.mjs';
-import { Message } from 'discord.js';
-
 /**
- * 
- * @param {Message} raw 
- * @returns 
+ * split the message in a part with the first command, and the args concatenated
+ * @param {Message} discordMessage 
+ * @returns {[string,string]}
  */
-export function genChannelID(raw){
-  return "G" + raw.guild.id + 'C' + raw.channel.id
-}
-
-export function getMainChannels(client) {
-  const channels = client.channels.cache.filter(each => {
-    if (each.rawPosition == 0 && each.type == 0) return each
-  });
-  return channels
-}
-
-export function getDevKeys() {
-  const obj = getConfigObj(path.resolve(process.cwd(),'../','chatrgb.env'))
-  return obj
-}
-
-export function getConfigObj(path) {
-  const file = fs.readFileSync(path, 'utf-8') + '\n'
-
-  let obj = {
-    data:{},
-    get:(item,defaultValue)=>{
-      if(obj.data[item]){
-        return obj.data[item]
+export function contentSplitter(discordMessage) {
+    return discordMessage.content.split(" ").reduce((acc, next, i) => {
+      if (i == 0) {
+        acc[0] = next
+        acc[1] = ""
       }
-      else{
-        if(!file.endsWith('\n'))fs.appendFileSync(path,'\n')
-        fs.appendFileSync(path,item + '=' + defaultValue+'\n')
-        return defaultValue
+      else {
+        acc[1] += " " + next
+        acc[1] = acc[1].trim()
       }
-    }
-
+      return acc
+    }, [])
   }
-
-  file.split('\n').forEach(each => {
-    const [prop, value] = each.split('=')
-    if (prop == undefined || value == undefined) {
-      if(prop.length==0)return null
-      logger.warn('The config.env have undefined itens. \n  {' + prop + '=' + value + '} => This can cause errors!')
-    }
-    obj.data[prop] = value
-  })
-  return obj
-}
